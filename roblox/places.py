@@ -57,3 +57,16 @@ class Place(BasePlace):
         self.price: int = data["price"]
         self.image_token: str = data["imageToken"]
         self.has_verified_badge: bool = data["hasVerifiedBadge"]
+
+
+class PlaceListing(BasePlace):
+    def __init__(self, client: Client, data: dict):
+        super().__init__(client=client, place_id=data["id"])
+
+        self._client: Client = client
+
+        self.id: int = data['id']
+        self.name: str = data['name']
+        self.description: str = data['description']
+
+        self.universe: BaseUniverse = BaseUniverse(client=self._client, universe_id=data["universeId"])

@@ -21,7 +21,7 @@ from .chat import ChatProvider
 from .delivery import DeliveryProvider
 from .groups import Group
 from .partials.partialuser import PartialUser, RequestedUsernamePartialUser, PreviousUsernamesPartialUser
-from .places import Place
+from .places import Place, PlaceListing
 from .plugins import Plugin
 from .presence import PresenceProvider
 from .thumbnails import ThumbnailProvider
@@ -312,6 +312,27 @@ class Client:
             Universe(client=self, data=universe_data)
             for universe_data in universes_data
         ]
+    
+    async def get_universe_places(
+        self,
+        universe_id: int
+    ) -> PageIterator:
+        """
+        Grabs a list of places corresponding to the passed universe ID.
+
+        Arguments:
+            universe_id: A Roblox universe ID.
+
+        Returns:
+            A PageIterator containing PlaceListing.
+        """
+        return PageIterator(
+            client=self,
+            url=self._url_generator.get_url("develop", f"v1/universes/{universe_id}/places"),
+            page_size=100,
+            max_items=None,
+            handler=lambda client, data: PlaceListing(client, data),
+        )
 
     async def get_universe(self, universe_id: int) -> Universe:
         """
